@@ -19,19 +19,15 @@ export class User {
   @Column("simple-array", { nullable: true })
   provider: string[];
 
+  @Column({ nullable: true })
+  role: string;
+
   @BeforeInsert()
   async setPassword(password: string) {
     if (!password) return;
 
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(password || this.password, salt);
-  }
-
-  async updatePassword(password: string) {
-    if (!password) return;
-
-    const salt = await bcrypt.genSalt();
-    return await bcrypt.hash(password, salt);
   }
 
   async verifyPassword(password: string) {

@@ -7,12 +7,8 @@ import { createGlobalStyle } from "styled-components";
 import "./static/fonts/font.css";
 import "./static/normalize.css";
 import { StyledEngineProvider } from "@mui/joy/styles";
-import {
-  ApolloClient,
-  ApolloProvider,
-  gql,
-  InMemoryCache,
-} from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { CookiesProvider } from "react-cookie";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -33,9 +29,11 @@ root.render(
   <>
     <GlobalStyles />
     <StyledEngineProvider injectFirst>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
+      <CookiesProvider>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
+      </CookiesProvider>
     </StyledEngineProvider>
   </>
 );

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 import { GET_USERS } from "~/lib/graphql/users";
+import { useCookies } from "react-cookie";
 
 const Container = styled.div`
   display: flex;
@@ -42,11 +43,18 @@ const Container = styled.div`
 `;
 
 const Users = () => {
-  const { loading, error, data } = useQuery(GET_USERS);
+  const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
+  const { loading, error, data } = useQuery(GET_USERS, {
+    context: {
+      headers: {
+        authorization: cookies.access_token,
+      },
+    },
+  });
 
-  React.useEffect(() => {
-    console.log(data);
-  }, [data]);
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return loading ? (
     <div>loading...</div>
@@ -55,8 +63,8 @@ const Users = () => {
       <div className="admin-header">
         <ul>
           <a href="/admin/users">Users</a>
-          <a href="/admin/users">Collections</a>
-          <a href="/admin/users">Products</a>
+          <a href="/admin/collections">Collections</a>
+          <a href="/admin/products">Products</a>
         </ul>
         <div>
           Server Status: <span>{error ? "Error" : "Good"}</span>
@@ -69,6 +77,7 @@ const Users = () => {
             <th>Email</th>
             <th>Name</th>
             <th>Providers</th>
+            <th>Role</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -78,7 +87,8 @@ const Users = () => {
               <th>{d.id}</th>
               <th>{d.nickname}</th>
               <th>{d.email}</th>
-              <th>{d.provider.join(", ")}</th>
+              <th>{d.provider ? d.provider.join(", ") : null}</th>
+              <th>{d.role ? d.role : "user"}</th>
               <th>
                 <button>Remove</button>
               </th>

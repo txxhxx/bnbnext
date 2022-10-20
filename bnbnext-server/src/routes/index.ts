@@ -31,12 +31,11 @@ router.post("/register", (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local-register", (err, user, info) => {
     if (info) {
       res.status(401).json({ error: info });
+    } else {
+      const tokens = user.generateUserToken({ id: user.id });
+      setTokenCookie(res, tokens);
+      res.sendStatus(200);
     }
-
-    const token = generateToken({ id: user.id });
-
-    res.cookie("token", token, { maxAge: 900000, httpOnly: true });
-    res.sendStatus(200);
   })(req, res, next);
 });
 

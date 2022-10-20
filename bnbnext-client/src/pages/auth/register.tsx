@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -36,6 +37,7 @@ const Register = () => {
   });
   const [error, setError] = React.useState<null | string>("");
   const [disabled, setDisabled] = React.useState<boolean>(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (
@@ -73,7 +75,7 @@ const Register = () => {
           { withCredentials: true }
         );
 
-        console.log(response);
+        navigate("/");
       } catch (err: any) {
         console.log(err);
         setError(err.response.data.error.message);

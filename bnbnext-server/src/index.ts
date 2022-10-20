@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
 import cors from "cors";
+import { decodeToken } from "./lib/token";
 
 dotenv.config();
 
@@ -29,12 +30,14 @@ async function startApolloServer(schema) {
     context: async ({ req }) => {
       // check token from header
       const token = req.headers.authorization;
-      if (token) {
-        return jwt.verify(token, process.env.JWT_SECRET, (error, decoded: any) => ({
-          id: decoded.id,
-        }));
-      } else {
-        return null;
+
+      try {
+        const decoded: any = await decodeToken(token);
+        return {
+          user_id: decoded.user_id,
+        };
+      } catch (e) {
+        return {};
       }
     },
   });

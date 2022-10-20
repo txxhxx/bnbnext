@@ -8,10 +8,7 @@ export const typeDefs = gql`
     email: String
     nickname: String
     provider: [String]
-  }
-
-  type Token {
-    token: String
+    role: String
   }
 
   extend type Query {
@@ -21,8 +18,13 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    users: async () => {
+    users: async (parent, args, context, info) => {
       const userRepo = AppDataSource.getRepository(User);
+      const user = await userRepo.findOne({ where: { id: context.user_id } });
+
+      if (user.role !== "admin") {
+        throw new ApolloError("Permission denied.");
+      }
 
       return await userRepo.find();
     },

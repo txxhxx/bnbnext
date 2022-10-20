@@ -29,14 +29,14 @@ export const register = new LocalStrategy(
     const user = await userRepo.findOne({ where: { email } });
 
     if (user) {
-      cb(null, null, { message: "Already Exists." });
+      return cb(null, null, { message: "Already Exists." });
     }
 
     // create new user
     const newUser = new User();
     newUser.email = email;
-    newUser.password = password;
     newUser.nickname = req.body.nickname;
+    await newUser.setPassword(password);
 
     await userRepo.save(newUser);
     await cb(null, newUser);
