@@ -1,36 +1,38 @@
 import React from "react";
 import styled from "styled-components";
 
-import Masonry from "@mui/lab/Masonry";
-
-import { Header } from "~/components/Header";
-import Collection from "~/components/collection/Collection";
+import { getCollections, getProducts, getStories } from "~/lib/api/test";
 
 const Container = styled.div`
-  margin-top: 96px;
+  header {
+    width: 100%;
+    height: 56px;
+    background-color: #000;
+  }
 `;
 
-const Story = styled.div`
-  background-color: black;
-  aspect-ratio: 1 / 1;
-  min-width: 66.6%;
-`;
+const Home = () => {
+  React.useEffect(() => {
+    getCollections().then((collection) => {
+      console.log("Collection: ", collection.data);
+    });
 
-const home = () => {
+    getProducts().then((products) => {
+      console.log("Products: ", products.data);
+    });
+
+    getStories("feature-believer").then((stories) => {
+      console.log("Stories: ", stories.data);
+    });
+  }, []);
+
   return (
     <React.Fragment>
-      <Header />
       <Container>
-        <Masonry columns={3} spacing={1}>
-          <Collection />
-          <Collection />
-          <Collection />
-          <Collection />
-          <Story />
-        </Masonry>
+        <header>header</header>
       </Container>
     </React.Fragment>
   );
 };
 
-export default home;
+export default Home;

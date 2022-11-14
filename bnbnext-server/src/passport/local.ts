@@ -5,17 +5,21 @@ import { User } from "../entity/User";
 export const local = new LocalStrategy(
   { usernameField: "email", passwordField: "password" },
   async (email, password, cb) => {
+    if (!email && !password) {
+      return cb(null, null, { message: "Please input email and password." });
+    }
+
     const userRepo = AppDataSource.getRepository(User);
     const user = await userRepo.findOne({ where: { email } });
 
     if (!user) {
-      return cb({ message: "Incorrect username or password." }, false);
+      return cb(null, null, { message: "Incorrect username or password." });
     }
 
     const result = await user.verifyPassword(password);
 
     if (!result) {
-      return cb({ message: "Incorrect username or password" }, false);
+      return cb(null, null, { message: "Incorrect username or password" });
     }
 
     return cb(null, user);

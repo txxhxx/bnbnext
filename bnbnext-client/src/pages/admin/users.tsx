@@ -65,6 +65,7 @@ const Users = () => {
           <a href="/admin/users">Users</a>
           <a href="/admin/collections">Collections</a>
           <a href="/admin/products">Products</a>
+          <a href="/admin/stories">Stories</a>
         </ul>
         <div>
           Server Status: <span>{error ? "Error" : "Good"}</span>

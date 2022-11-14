@@ -8,7 +8,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [input, setInput] = React.useState({
     email: "",
@@ -66,4 +66,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
